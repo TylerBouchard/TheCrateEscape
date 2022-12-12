@@ -18,7 +18,7 @@ public class CrateBehavior : MonoBehaviour
         StartX = transform.position.x;
         StartY = transform.position.y;
     }
-    void Update()
+    void FixedUpdate()
     {
         Vector2 vel = crateVelocity.velocity;
         if (vel.x < 0)
@@ -53,7 +53,7 @@ public class CrateBehavior : MonoBehaviour
             transform.position = CratePos;
         }
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+   /* private void OnTriggerEnter2D(Collider2D collision)
     {
         GameController gc = FindObjectOfType<GameController>();
         if (collision.gameObject.tag == "Player")
@@ -68,5 +68,5 @@ public class CrateBehavior : MonoBehaviour
         {
             gc.HideInstructions();
         }
-    }
+    }*/
 }

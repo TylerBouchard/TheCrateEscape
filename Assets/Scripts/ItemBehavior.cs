@@ -10,6 +10,7 @@ public class ItemBehavior : MonoBehaviour
     private bool touchingPlayer = false;
     private bool beingHeld = false;
     public int unlocksDoor;
+    public AudioClip pickupSound;
     void Start()
     {
         if (inCrate) {
@@ -21,30 +22,39 @@ public class ItemBehavior : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        GameController gc = FindObjectOfType<GameController>();
         if (Input.GetKeyDown(KeyCode.Q) && touchingPlayer && !beingHeld) {
             location = GameObject.Find("StickGuy").transform;
             beingHeld = true;
+            AudioSource.PlayClipAtPoint(pickupSound, transform.position);
         }
         else if (Input.GetKeyDown(KeyCode.Q) && beingHeld)
         {
             location = gameObject.transform;
             beingHeld = false;
         }
+        if (touchingPlayer && beingHeld)
+        {
+            gc.HideInstructions();
+        }
+        else if (touchingPlayer) {
+            gc.DisplayInstructions("Press [Q] to Pickup");
+        } 
         transform.position = location.position;
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Player") {
             touchingPlayer = true;
-            print("touching player");
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
+        GameController gc = FindObjectOfType<GameController>();
         if (collision.gameObject.tag == "Player")
         {
             touchingPlayer = false;
-            print("not touching player");
+            gc.HideInstructions();
         }
     }
     public void ObjVisable(bool choice) {

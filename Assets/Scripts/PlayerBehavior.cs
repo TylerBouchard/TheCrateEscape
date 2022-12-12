@@ -13,6 +13,7 @@ public class PlayerBehavior : MonoBehaviour
     public float deceleration = 0.05f;
     public float midAirDeceleration = 0.005f;
     public float jumpPower = 15;
+    public AudioClip jumpSound;
 
     private GameObject door;
     private DoorBehavior doorScript;
@@ -31,6 +32,21 @@ public class PlayerBehavior : MonoBehaviour
         resetBehaviorScript = resetButton.GetComponent<ResetButtonBehavior>();
     }
     void Update()
+    {
+        if ((Input.GetKeyDown(KeyCode.E)) && (touchingDoor))
+        {
+
+            Transform doorLocation = doorScript.UseDoor();
+            Vector3 playerPos = doorLocation.position;
+            transform.position = playerPos;
+        }
+        if ((Input.GetKeyDown(KeyCode.R)) && (touchingReset))
+        {
+            print("R");
+            resetBehaviorScript.ResetCrates();
+        }
+    }
+    void FixedUpdate()
     {
         if (canMove) {
             PlayerMovement();
@@ -134,22 +150,11 @@ public class PlayerBehavior : MonoBehaviour
         if (Input.GetKey(KeyCode.Space) && grounded)
         {
             Jump(jumpPower);
+            AudioSource.PlayClipAtPoint(jumpSound, transform.position);
         }
         Vector2 vel = rb.velocity;
         vel.x = speed;
         rb.velocity = vel;
-        if ((Input.GetKeyDown(KeyCode.E)) && (touchingDoor))
-        {
-
-            Transform doorLocation = doorScript.UseDoor();
-            Vector3 playerPos = doorLocation.position;
-            transform.position = playerPos;
-        }
-        if ((Input.GetKeyDown(KeyCode.R)) && (touchingReset))
-        {
-            print("R");
-            resetBehaviorScript.ResetCrates();
-        }
     }
     public void ChangeCanMove(bool answer) {
         canMove = answer;
